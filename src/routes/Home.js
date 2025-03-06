@@ -11,7 +11,9 @@ function Home() {
         <button className={`${styles.first_button} ${styles.home_button}`} onClick={() => navigate('/join')}>
           회원가입
         </button>
-        <button className={styles.home_button}>로그인</button>
+        <button className={styles.home_button} onClick={() => navigate('/login')}>
+          로그인
+        </button>
       </div>
     </div>
   );
