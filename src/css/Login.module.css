@@ -1,0 +1,51 @@
+.login {
+  margin-top: 132px;
+}
+.login h1 {
+  width: 243px;
+  height: 70px;
+  font-weight: 400;
+  font-size: 64px;
+  line-height: 100%;
+  color: #8e8c8c;
+  margin-bottom: 121px;
+}
+.login form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.div {
+  display: inline;
+}
+.div label {
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 100%;
+  color: #8e8c8c;
+}
+
+.div input {
+  width: 743px;
+  height: 54px;
+  border-radius: 250px;
+  border: none;
+  margin-left: 45px;
+  margin-bottom: 53px;
+}
+
+.div input[type='password'] {
+  margin-left: 23px;
+}
+.login button {
+  margin-top: 115px;
+  width: 119px;
+  height: 54px;
+  background-color: #ffffff;
+  border: none;
+  border-radius: 250px;
+  font-weight: 400;
+  font-size: 24px;
+  color: #8e8c8c;
+}
