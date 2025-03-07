@@ -1,0 +1,21 @@
+.header {
+  width: 100vw;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.header h1 {
+  margin: 18px 0 10px 32px;
+  font-weight: 400;
+  font-size: 32px;
+  line-height: 100%;
+  color: #8e8c8c;
+}
+.header button {
+  margin-top: 18px;
+  margin-right: 22px;
+  margin-bottom: 23px;
+  border: none;
+  background-color: #e8f6f2;
+  font-size: 13px;
+}
