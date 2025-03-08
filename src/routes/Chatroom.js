@@ -3,9 +3,32 @@ import { useNavigate } from 'react-router-dom';
 import { IoSearch } from 'react-icons/io5';
 import { FaPlus } from 'react-icons/fa6';
 import { FaPen } from 'react-icons/fa';
+import { useEffect, useState } from 'react';
 
 function Chatroom() {
   const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await fetch('http://localhost:3000/session', {
+          method: 'GET',
+          credentials: 'include',
+        });
+
+        const data = await res.json();
+        if (data.loggedIn) {
+          setUser(data.user);
+        } else {
+          console.log('User not logged in');
+        }
+      } catch (error) {
+        console.error('세션 확인 오류:', error);
+      }
+    };
+
+    fetchUser();
+  }, []);
   const handleClick = async () => {
     try {
       const response = await fetch('http://localhost:3000/logout', {
@@ -24,6 +47,7 @@ function Chatroom() {
       console.error('Login Error:', error);
     }
   };
+
   return (
     <div>
       <div className={styles.header}>
@@ -43,7 +67,11 @@ function Chatroom() {
             <span>내 프로필</span>
           </div>
           <div>
-            <img className={styles.img} src="face.jpg" alt="" />
+            <img
+              className={styles.img}
+              src={user ? `http://localhost:3000/${user.profile}` : '기본이미지.jpg'}
+              alt="프로필"
+            />
             <div>
               <span>닉네임</span>
               <span>nickname@naver.com</span>
