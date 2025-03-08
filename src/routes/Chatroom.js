@@ -73,8 +73,8 @@ function Chatroom() {
               alt="프로필"
             />
             <div>
-              <span>닉네임</span>
-              <span>nickname@naver.com</span>
+              <span>{user ? user.username : null}</span>
+              <span>{user ? user.email : null}</span>
             </div>
             <FaPen className={styles.icon_pen} />
           </div>
