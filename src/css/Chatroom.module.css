@@ -93,3 +93,11 @@
   bottom: 70px;
   right: 10px;
 }
+.search_input {
+  width: 231px;
+  height: 37px;
+  border-radius: 250px;
+  background-color: #e8f6f2;
+  border: 1px solid #ffffff;
+  text-indent: 30px;
+}
