@@ -200,7 +200,7 @@ function Chatroom() {
             <RxCross2 className={styles.cross_icon} onClick={handleModal} />
           </div>
           <div className={styles.img_div}>
-            <img src={user ? `http://localhost:3000/${user.profile}` : '기본이미지.jpg'} alt="프로필" />
+            <img src={imgFile || (user ? `http://localhost:3000/${user.profile}` : '기본이미지.jpg')} alt="프로필" />
             <div className={styles.icon_div} onClick={handleIconClick}>
               <IoCameraOutline className={styles.camera} />
             </div>
