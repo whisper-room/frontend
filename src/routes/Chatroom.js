@@ -1,5 +1,5 @@
 import styles from '../css/Chatroom.module.css';
-import { useNavigate } from 'react-router-dom';
+import { data, useNavigate } from 'react-router-dom';
 import { IoSearch } from 'react-icons/io5';
 import { IoCameraOutline } from 'react-icons/io5';
 import { FaPlus } from 'react-icons/fa6';
@@ -32,6 +32,7 @@ function Chatroom() {
         const data = await res.json();
         if (data.loggedIn) {
           setUser(data.user);
+          console.log(data.user);
         } else {
           console.log('User not logged in');
         }
@@ -41,7 +42,7 @@ function Chatroom() {
     };
 
     fetchUser();
-  }, []);
+  }, [user]);
 
   // 로그아웃 버튼 클릭시 로그아웃
   const handleClick = async () => {
@@ -124,6 +125,39 @@ function Chatroom() {
     setImgFile('');
   };
 
+  // 프로필 수정 API
+  const handleProfile = async () => {
+    const formData = new FormData();
+    if (imgFile) {
+      formData.append('profile', fileInputRef.current.files[0]);
+    }
+    formData.append('username', nickname);
+
+    try {
+      const response = await fetch('http://localhost:3000/user/edit', {
+        method: 'POST',
+        credentials: 'include',
+        body: formData,
+      });
+      const result = await response.json();
+      if (response.ok) {
+        alert('프로필이 성공적으로 업데이트되었습니다.');
+        setUser((prevUser) => ({
+          ...prevUser,
+          username: nickname || prevUser.username,
+          //nickname이 변경 되었다면 nickname을 저장, 변경되지 않았다면 기존값(prevUser)유지
+          profile: imgFile || prevUser.profile,
+        }));
+        console.log(data.user);
+        handleModal();
+      } else {
+        alert(result.message);
+      }
+    } catch (error) {
+      console.error('프로필 업데이트 오류:', error);
+    }
+  };
+
   return (
     <div>
       <div className={styles.header}>
@@ -166,7 +200,7 @@ function Chatroom() {
             <RxCross2 className={styles.cross_icon} onClick={handleModal} />
           </div>
           <div className={styles.img_div}>
-            {imgFile ? <img src={imgFile} alt="프로필 이미지" /> : null}
+            <img src={user ? `http://localhost:3000/${user.profile}` : '기본이미지.jpg'} alt="프로필" />
             <div className={styles.icon_div} onClick={handleIconClick}>
               <IoCameraOutline className={styles.camera} />
             </div>
@@ -187,7 +221,7 @@ function Chatroom() {
             placeholder="수정할 닉네임을 입력해주세요."
           />
           <span>{nickname.length}/20</span>
-          <button>수정완료</button>
+          <button onClick={handleProfile}>수정완료</button>
         </div>
       )}
     </div>
