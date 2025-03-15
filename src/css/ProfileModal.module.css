@@ -1,0 +1,79 @@
+.profile_modal {
+  position: absolute;
+  top: 252px;
+  left: 372px;
+  width: 458px;
+  height: 369px;
+  background-color: white;
+}
+.profile_modal > div:first-child {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 21px;
+}
+.profile_modal span {
+  margin: 12px 0 0 11px;
+  font-size: 12px;
+}
+.profile_modal > span {
+  position: absolute;
+  top: 173px;
+  right: 17px;
+  color: red;
+}
+.profile_modal > input {
+  width: 423px;
+  height: 25px;
+  text-indent: 120px;
+  border: none;
+  border-bottom: 1px solid #dadada;
+  margin-bottom: 100px;
+}
+.profile_modal button {
+  width: 136px;
+  height: 29px;
+  border-radius: 250px;
+  border: none;
+  background-color: #e8f6f2;
+}
+
+.cross_icon {
+  margin: 9px 6px 0 0;
+  font-size: 12px;
+}
+.img_div {
+  position: relative;
+  width: 102px;
+  height: 91px;
+  background-color: #dadada;
+  border-radius: 50%;
+  margin-bottom: 40px;
+}
+.img_div img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+.icon_div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  background-color: #b6b6b6;
+  width: 24px;
+  height: 21px;
+  border-radius: 50%;
+  bottom: 0;
+  left: 67px;
+}
+.camera {
+  width: 18px;
+  height: 18px;
+  color: white;
+}
+.hidden_input {
+  display: none;
+}

@@ -54,7 +54,7 @@
   border: 1px solid #ffffff;
   text-indent: 30px;
 }
-.profile_modal {
+/* .profile_modal {
   position: absolute;
   top: 252px;
   left: 372px;
@@ -78,12 +78,12 @@
   top: 173px;
   right: 17px;
   color: red;
-}
-.cross_icon {
+} */
+/* .cross_icon {
   margin: 9px 6px 0 0;
   font-size: 12px;
-}
-.img_div {
+} */
+/* .img_div {
   position: relative;
   width: 102px;
   height: 91px;
@@ -96,9 +96,9 @@
   height: 100%;
   object-fit: cover;
   border-radius: 50%;
-}
+} */
 
-.icon_div {
+/* .icon_div {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -109,16 +109,16 @@
   border-radius: 50%;
   bottom: 0;
   left: 67px;
-}
-.camera {
+} */
+/* .camera {
   width: 18px;
   height: 18px;
   color: white;
-}
-.hidden_input {
+} */
+/* .hidden_input {
   display: none;
-}
-.profile_modal > input {
+} */
+/* .profile_modal > input {
   width: 423px;
   height: 25px;
   text-indent: 120px;
@@ -132,4 +132,4 @@
   border-radius: 250px;
   border: none;
   background-color: #e8f6f2;
-}
+} */
