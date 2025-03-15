@@ -1,9 +1,10 @@
 import styles from '../css/Chatroom.module.css';
-import { data, useNavigate } from 'react-router-dom';
+import ProfileCard from '../components/Profile';
+import { useNavigate } from 'react-router-dom';
 import { IoSearch } from 'react-icons/io5';
 import { IoCameraOutline } from 'react-icons/io5';
 import { FaPlus } from 'react-icons/fa6';
-import { FaPen } from 'react-icons/fa';
+// import { FaPen } from 'react-icons/fa';
 import { RxCross2 } from 'react-icons/rx';
 import { useEffect, useState, useRef } from 'react';
 
@@ -32,7 +33,6 @@ function Chatroom() {
         const data = await res.json();
         if (data.loggedIn) {
           setUser(data.user);
-          console.log(data.user);
         } else {
           console.log('User not logged in');
         }
@@ -42,7 +42,7 @@ function Chatroom() {
     };
 
     fetchUser();
-  }, [user]);
+  }, []);
 
   // 로그아웃 버튼 클릭시 로그아웃
   const handleClick = async () => {
@@ -142,13 +142,7 @@ function Chatroom() {
       const result = await response.json();
       if (response.ok) {
         alert('프로필이 성공적으로 업데이트되었습니다.');
-        setUser((prevUser) => ({
-          ...prevUser,
-          username: nickname || prevUser.username,
-          //nickname이 변경 되었다면 nickname을 저장, 변경되지 않았다면 기존값(prevUser)유지
-          profile: imgFile || prevUser.profile,
-        }));
-        console.log(data.user);
+        setUser(result.user); //서버 최신 유저 정보
         handleModal();
       } else {
         alert(result.message);
@@ -176,21 +170,7 @@ function Chatroom() {
         <div></div>
         <div></div>
         <div className={styles.profile_container}>
-          <div>
-            <span>내 프로필</span>
-          </div>
-          <div>
-            <img
-              className={styles.img}
-              src={user ? `http://localhost:3000/${user.profile}` : '기본이미지.jpg'}
-              alt="프로필"
-            />
-            <div>
-              <span>{user ? user.username : null}</span>
-              <span>{user ? user.email : null}</span>
-            </div>
-            <FaPen className={styles.icon_pen} onClick={handleEditClick} />
-          </div>
+          <ProfileCard user={user} onEditClick={handleEditClick} />
         </div>
       </div>
       {showPenIcon && (
