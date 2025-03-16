@@ -23,7 +23,7 @@
   right: 17px;
   color: red;
 }
-.profile_modal > input {
+.profile_input {
   width: 423px;
   height: 25px;
   text-indent: 120px;
@@ -76,4 +76,30 @@
 }
 .hidden_input {
   display: none;
+}
+
+/* CreateChatModal CSS */
+
+.createChat_input {
+  position: relative;
+  width: 423px;
+  height: 25px;
+  border: none;
+  border-bottom: 1px solid #dadada;
+  margin-bottom: 26px;
+}
+.createChat_input::placeholder {
+  text-align: center;
+}
+button {
+  margin-top: 34px;
+}
+.input_div {
+  position: relative;
+}
+.span {
+  position: absolute;
+  top: -5px;
+  right: 0;
+  color: #8e8c8c;
 }

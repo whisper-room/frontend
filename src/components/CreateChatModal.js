@@ -3,7 +3,7 @@ import { IoCameraOutline } from 'react-icons/io5';
 import { RxCross2 } from 'react-icons/rx';
 import { useState, useRef } from 'react';
 
-function ProfileModal({ user, setUser, setShowPenIcon }) {
+function CreateChatModal({ user, setUser, setShowPlusIcon }) {
   const [imgFile, setImgFile] = useState('');
   const [nickname, setNickname] = useState('');
 
@@ -33,7 +33,7 @@ function ProfileModal({ user, setUser, setShowPenIcon }) {
 
   // modal 닫으면 내용 초기화
   const handleModal = () => {
-    setShowPenIcon(false);
+    setShowPlusIcon(false);
     setNickname('');
     setImgFile('');
   };
@@ -68,11 +68,11 @@ function ProfileModal({ user, setUser, setShowPenIcon }) {
   return (
     <div className={styles.profile_modal}>
       <div>
-        <span>프로필 수정</span>
+        <span>채팅방 만들기</span>
         <RxCross2 className={styles.cross_icon} onClick={handleModal} />
       </div>
       <div className={styles.img_div}>
-        <img src={imgFile || (user ? `http://localhost:3000/${user.profile}` : '기본이미지.jpg')} alt="프로필" />
+        {imgFile ? <img src={imgFile} alt="프로필 이미지" /> : null}
         <div className={styles.icon_div} onClick={handleIconClick}>
           <IoCameraOutline className={styles.camera} />
         </div>
@@ -85,18 +85,30 @@ function ProfileModal({ user, setUser, setShowPenIcon }) {
           onChange={saveImgFile}
         />
       </div>
-      <input
-        className={styles.profile_input}
-        value={nickname}
-        onChange={handleInput}
-        type="text"
-        maxLength="20"
-        placeholder="수정할 닉네임을 입력해주세요."
-      />
-      <span className={styles.span}>{nickname.length}/20</span>
-      <button onClick={handleProfile}>수정완료</button>
+      <div className={styles.input_div}>
+        <input
+          className={styles.createChat_input}
+          value={nickname}
+          onChange={handleInput}
+          type="text"
+          maxLength="20"
+          placeholder="채팅방 이름을 입력해 주세요."
+        />
+        <span className={styles.span}>{nickname.length}/20</span>
+      </div>
+      <div className={styles.input_div}>
+        <input
+          className={styles.createChat_input}
+          type="text"
+          maxLength="20"
+          placeholder="초대할 대화상대 닉네임을 입력해주세요."
+        />
+        <span className={styles.span}>{nickname.length}/20</span>
+      </div>
+
+      <button onClick={handleProfile}>완료</button>
     </div>
   );
 }
 
-export default ProfileModal;
+export default CreateChatModal;

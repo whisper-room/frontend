@@ -1,6 +1,7 @@
 import styles from '../css/Chatroom.module.css';
 import ProfileCard from '../components/Profile';
 import ProfileModal from '../components/ProfileModal';
+import CreateChatModal from '../components/CreateChatModal';
 import { useNavigate } from 'react-router-dom';
 import { IoSearch } from 'react-icons/io5';
 import { FaPlus } from 'react-icons/fa6';
@@ -11,6 +12,7 @@ function Chatroom() {
   const [user, setUser] = useState(null);
   const [showInput, setShowInput] = useState(false); //돋보기 아이콘 클릭 여부 확인
   const [showPenIcon, setShowPenIcon] = useState(false); //프로필 수정 아이콘 클릭 여부 확인
+  const [showPlusIcon, setShowPlusIcon] = useState(false); //채팅방 추가 아이콘 클릭 여부 확인
   const inputRef = useRef(null);
   const searchIconRef = useRef(null);
   // useRef는 React에서 DOM 요소에 직접 접근하거나 컴포넌트가 리렌더링될 때도 값이 유지되도록 도와줌
@@ -89,6 +91,11 @@ function Chatroom() {
     setShowPenIcon(true);
   };
 
+  const handlePlusIcon = () => {
+    setShowPlusIcon(true);
+    console.log(showPlusIcon);
+  };
+
   return (
     <div>
       <div className={styles.header}>
@@ -98,7 +105,7 @@ function Chatroom() {
       <div className={styles.chatroom_container}>
         <div>
           <IoSearch className={styles.first_icon} onClick={handleSearchClick} ref={searchIconRef} />
-          {!showInput && <FaPlus className={styles.first_icon} />}
+          {!showInput && <FaPlus className={styles.first_icon} onClick={handlePlusIcon} />}
           {showInput && (
             <input ref={inputRef} className={styles.search_input} type="text" placeholder="채팅방 이름을 입력하세요." />
           )}
@@ -111,6 +118,7 @@ function Chatroom() {
         </div>
       </div>
       {showPenIcon && <ProfileModal user={user} setUser={setUser} setShowPenIcon={setShowPenIcon} />}
+      {showPlusIcon && <CreateChatModal user={user} setUser={setUser} setShowPlusIcon={setShowPlusIcon} />}
     </div>
   );
 }
