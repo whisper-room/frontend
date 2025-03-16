@@ -3,7 +3,7 @@ import { IoCameraOutline } from 'react-icons/io5';
 import { RxCross2 } from 'react-icons/rx';
 import { useState, useRef } from 'react';
 
-function CreateChatModal({ user, setUser, setShowPlusIcon }) {
+function CreateChatModal({ setShowPlusIcon, fetchChatList }) {
   const [imgFile, setImgFile] = useState('');
   const [roomname, setRoomName] = useState('');
   const [userarray, setUserArray] = useState('');
@@ -69,6 +69,7 @@ function CreateChatModal({ user, setUser, setShowPlusIcon }) {
 
       if (response.ok) {
         alert('채팅방이 생성되었습니다!');
+        fetchChatList();
         handleModal();
       } else {
         alert(data.message || '채팅방 생성 실패');

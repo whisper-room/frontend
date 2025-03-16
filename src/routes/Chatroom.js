@@ -2,6 +2,7 @@ import styles from '../css/Chatroom.module.css';
 import ProfileCard from '../components/Profile';
 import ProfileModal from '../components/ProfileModal';
 import CreateChatModal from '../components/CreateChatModal';
+import ChatList from '../components/ChatList';
 import { useNavigate } from 'react-router-dom';
 import { IoSearch } from 'react-icons/io5';
 import { FaPlus } from 'react-icons/fa6';
@@ -10,6 +11,8 @@ import { useEffect, useState, useRef } from 'react';
 function Chatroom() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
+  const [roomname, setRoomName] = useState([]);
+  const [roomimg, setRoomImg] = useState([]);
   const [showInput, setShowInput] = useState(false); //돋보기 아이콘 클릭 여부 확인
   const [showPenIcon, setShowPenIcon] = useState(false); //프로필 수정 아이콘 클릭 여부 확인
   const [showPlusIcon, setShowPlusIcon] = useState(false); //채팅방 추가 아이콘 클릭 여부 확인
@@ -37,9 +40,31 @@ function Chatroom() {
         console.error('세션 확인 오류:', error);
       }
     };
-
     fetchUser();
   }, []);
+
+  const fetchChatList = async () => {
+    try {
+      const res = await fetch('http://localhost:3000/api/chatlist', {
+        method: 'GET',
+        credentials: 'include',
+      });
+
+      const data = await res.json();
+      const roomNames = data.map((room) => room.roomname);
+      const roomImgs = data.map((room) => room.roomimg);
+      setRoomName(roomNames);
+      setRoomImg(roomImgs);
+    } catch (error) {
+      console.error('채팅방 리스트 가져오기 오류:', error);
+    }
+  };
+
+  // user가 있을 때만 호출
+  useEffect(() => {
+    if (!user) return;
+    fetchChatList();
+  }, [user]);
 
   // 로그아웃 버튼 클릭시 로그아웃
   const handleClick = async () => {
@@ -111,14 +136,16 @@ function Chatroom() {
           )}
         </div>
         <div></div>
-        <div></div>
+        <div>
+          <ChatList roomname={roomname} roomimg={roomimg} />
+        </div>
         <div></div>
         <div className={styles.profile_container}>
           <ProfileCard user={user} onEditClick={handleEditClick} />
         </div>
       </div>
       {showPenIcon && <ProfileModal user={user} setUser={setUser} setShowPenIcon={setShowPenIcon} />}
-      {showPlusIcon && <CreateChatModal user={user} setUser={setUser} setShowPlusIcon={setShowPlusIcon} />}
+      {showPlusIcon && <CreateChatModal setShowPlusIcon={setShowPlusIcon} fetchChatList={fetchChatList} />}
     </div>
   );
 }
