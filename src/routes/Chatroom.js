@@ -2,6 +2,7 @@ import styles from '../css/Chatroom.module.css';
 import ProfileCard from '../components/Profile';
 import ProfileModal from '../components/ProfileModal';
 import CreateChatModal from '../components/CreateChatModal';
+import Chatting from '../components/Chatting';
 import ChatList from '../components/ChatList';
 import { useNavigate } from 'react-router-dom';
 import { IoSearch } from 'react-icons/io5';
@@ -13,9 +14,11 @@ function Chatroom() {
   const [user, setUser] = useState(null);
   const [roomname, setRoomName] = useState([]);
   const [roomimg, setRoomImg] = useState([]);
+  const [roomIds, setRoomIds] = useState([]);
   const [showInput, setShowInput] = useState(false); //돋보기 아이콘 클릭 여부 확인
   const [showPenIcon, setShowPenIcon] = useState(false); //프로필 수정 아이콘 클릭 여부 확인
   const [showPlusIcon, setShowPlusIcon] = useState(false); //채팅방 추가 아이콘 클릭 여부 확인
+  const [selectedRoomId, setSelectedRoomId] = useState(null);
   const inputRef = useRef(null);
   const searchIconRef = useRef(null);
   // useRef는 React에서 DOM 요소에 직접 접근하거나 컴포넌트가 리렌더링될 때도 값이 유지되도록 도와줌
@@ -53,8 +56,10 @@ function Chatroom() {
       const data = await res.json();
       const roomNames = data.map((room) => room.roomname);
       const roomImgs = data.map((room) => room.roomimg);
+      const ids = data.map((room) => room._id);
       setRoomName(roomNames);
       setRoomImg(roomImgs);
+      setRoomIds(ids);
     } catch (error) {
       console.error('채팅방 리스트 가져오기 오류:', error);
     }
@@ -137,9 +142,14 @@ function Chatroom() {
         </div>
         <div></div>
         <div>
-          <ChatList roomname={roomname} roomimg={roomimg} />
+          <ChatList
+            roomname={roomname}
+            roomimg={roomimg}
+            roomIds={roomIds}
+            onClick={(roomId) => setSelectedRoomId(roomId)}
+          />
         </div>
-        <div></div>
+        <div>{selectedRoomId && <Chatting roomId={selectedRoomId} username={user?.username} userId={user?._id} />}</div>
         <div className={styles.profile_container}>
           <ProfileCard user={user} onEditClick={handleEditClick} />
         </div>
