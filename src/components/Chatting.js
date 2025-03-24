@@ -1,10 +1,12 @@
 import styles from '../css/Chatting.module.css';
-import { useEffect, useState } from 'react';
 import socket from '../socket';
+import { useEffect, useState, useRef } from 'react';
+import { LuSend } from 'react-icons/lu';
 
 export default function Chatting({ roomId, username, userId }) {
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState('');
+  const messagesEndRef = useRef(null);
 
   // 방 클릭 시 초기 메시지 가져옴
   useEffect(() => {
@@ -40,6 +42,12 @@ export default function Chatting({ roomId, username, userId }) {
     };
   }, [roomId]);
 
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
+    }
+  }, [messages]);
+
   const handleSend = () => {
     if (text.trim() === '') return;
     socket.emit('sendMessage', {
@@ -52,25 +60,33 @@ export default function Chatting({ roomId, username, userId }) {
 
   return (
     <div className={styles.div}>
-      <div>
-        {messages.map((msg, idx) => (
-          <p key={idx}>
-            <img
-              src={`http://localhost:3000/${msg.sender.profile}`}
-              alt="프로필"
-              style={{ width: '30px', height: '30px', borderRadius: '50%', marginRight: '5px' }}
-            />
-            <strong>{msg.sender?.username || '알 수 없음'}:</strong> {msg.text}
-          </p>
-        ))}
+      <div className={styles.messageContainer} ref={messagesEndRef}>
+        {messages.map((msg, idx) => {
+          const isMine = msg.sender._id === userId;
+          return (
+            <div key={idx} className={isMine ? styles.my_chat_div : styles.other_chat_div}>
+              {isMine ? (
+                <span className={styles.my_message}>{msg.text}</span>
+              ) : (
+                <>
+                  <img
+                    src={`http://localhost:3000/${msg.sender.profile}`}
+                    alt="프로필"
+                    className={styles.profile_image}
+                  />
+                  <strong className={styles.strong}>{msg.sender?.username || '알 수 없음'}</strong>
+                  <span className={styles.other_message}>{msg.text}</span>
+                </>
+              )}
+            </div>
+          );
+        })}
       </div>
-      <input
-        className={styles.input}
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        placeholder="메시지를 입력하세요"
-      />
-      <button onClick={handleSend}>보내기</button>
+
+      <div className={styles.input}>
+        <input value={text} onChange={(e) => setText(e.target.value)} />
+        <LuSend onClick={handleSend} />
+      </div>
     </div>
   );
 }

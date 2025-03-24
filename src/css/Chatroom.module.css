@@ -22,7 +22,7 @@
 }
 .chatroom_container {
   width: 100vw;
-  height: 100vh;
+  height: calc(100vh - 64px);
   display: grid;
   grid-template-columns: 280px 3fr;
   grid-template-rows: 0.2fr 3fr 0.6fr;
