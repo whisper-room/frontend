@@ -21,6 +21,7 @@ function Chatroom() {
   const [showPlusIcon, setShowPlusIcon] = useState(false); //채팅방 추가 아이콘 클릭 여부 확인
   const [selectedRoomId, setSelectedRoomId] = useState(null);
   const [selectedRoomName, setSelectedRoomName] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
   const inputRef = useRef(null);
   const searchIconRef = useRef(null);
   // useRef는 React에서 DOM 요소에 직접 접근하거나 컴포넌트가 리렌더링될 때도 값이 유지되도록 도와줌
@@ -128,6 +129,18 @@ function Chatroom() {
     console.log(showPlusIcon);
   };
 
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const filteredRooms = roomname
+    .map((name, index) => ({
+      name,
+      img: roomimg[index],
+      id: roomIds[index],
+    }))
+    .filter((room) => room.name.includes(searchQuery));
+
   return (
     <div>
       <div className={styles.header}>
@@ -139,15 +152,22 @@ function Chatroom() {
           <IoSearch className={styles.first_icon} onClick={handleSearchClick} ref={searchIconRef} />
           {!showInput && <FaPlus className={styles.first_icon} onClick={handlePlusIcon} />}
           {showInput && (
-            <input ref={inputRef} className={styles.search_input} type="text" placeholder="채팅방 이름을 입력하세요." />
+            <input
+              ref={inputRef}
+              value={searchQuery}
+              onChange={handleSearchChange}
+              className={styles.search_input}
+              type="text"
+              placeholder="채팅방 이름을 입력하세요."
+            />
           )}
         </div>
         <div>{selectedRoomId && <ChattingHeader selectedRoomName={selectedRoomName} />}</div>
         <div>
           <ChatList
-            roomname={roomname}
-            roomimg={roomimg}
-            roomIds={roomIds}
+            roomname={filteredRooms.map((room) => room.name)}
+            roomimg={filteredRooms.map((room) => room.img)}
+            roomIds={filteredRooms.map((room) => room.id)}
             onClick={(roomId, roomName) => {
               setSelectedRoomId(roomId);
               setSelectedRoomName(roomName);
