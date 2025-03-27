@@ -59,7 +59,7 @@ function CreateChatModal({ setShowPlusIcon, fetchChatList }) {
     }
 
     try {
-      const response = await fetch('http://localhost:3000/chatroom/createroom', {
+      const response = await fetch('http://localhost:3000/chatroom/create', {
         method: 'POST',
         credentials: 'include',
         body: formData,
