@@ -1,6 +1,13 @@
 import styles from '../css/ChatRoomOptionModal.module.css';
 
-function ChatroomOptionsModal({ modalRef, selectedRoomId, fetchChatList, setShowOption }) {
+function ChatroomOptionsModal({
+  modalRef,
+  selectedRoomId,
+  fetchChatList,
+  setShowOption,
+  setSelectedRoomId,
+  setSelectedRoomName,
+}) {
   const handleMessageDelete = async () => {
     try {
       const response = await fetch(`http://localhost:3000/chatroom/${selectedRoomId}`, {
@@ -13,6 +20,8 @@ function ChatroomOptionsModal({ modalRef, selectedRoomId, fetchChatList, setShow
         alert(result.message);
         fetchChatList();
         setShowOption(false);
+        setSelectedRoomId(null);
+        setSelectedRoomName('');
       } else {
         alert(result.message);
       }

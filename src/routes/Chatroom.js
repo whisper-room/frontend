@@ -168,6 +168,8 @@ function Chatroom() {
               fetchChatList={fetchChatList}
               selectedRoomId={selectedRoomId}
               selectedRoomName={selectedRoomName}
+              setSelectedRoomId={setSelectedRoomId}
+              setSelectedRoomName={setSelectedRoomName}
             />
           )}
         </div>
