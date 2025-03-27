@@ -162,7 +162,15 @@ function Chatroom() {
             />
           )}
         </div>
-        <div>{selectedRoomId && <ChattingHeader selectedRoomName={selectedRoomName} />}</div>
+        <div>
+          {selectedRoomId && (
+            <ChattingHeader
+              fetchChatList={fetchChatList}
+              selectedRoomId={selectedRoomId}
+              selectedRoomName={selectedRoomName}
+            />
+          )}
+        </div>
         <div>
           <ChatList
             roomname={filteredRooms.map((room) => room.name)}
