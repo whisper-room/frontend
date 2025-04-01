@@ -83,7 +83,7 @@
   border-right: 10px solid #d9d9d9;
 }
 .input {
-  position: absolute; /* 또는 fixed (원하는 동작에 따라) */
+  position: absolute;
   bottom: 36px;
   width: 80%;
   height: 51px;
@@ -97,4 +97,9 @@
 }
 .input input:focus {
   outline: none;
+}
+.icon {
+  position: absolute;
+  right: 5px;
+  top: 11px;
 }

@@ -85,7 +85,7 @@ export default function Chatting({ roomId, username, userId }) {
 
       <div className={styles.input}>
         <input value={text} onChange={(e) => setText(e.target.value)} />
-        <LuSend onClick={handleSend} />
+        <LuSend onClick={handleSend} className={styles.icon} />
       </div>
     </div>
   );
