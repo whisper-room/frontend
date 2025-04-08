@@ -2,6 +2,7 @@ import styles from '../css/Chatting.module.css';
 import socket from '../socket';
 import { useEffect, useState, useRef } from 'react';
 import { LuSend } from 'react-icons/lu';
+import { IoImageOutline } from 'react-icons/io5';
 
 export default function Chatting({ roomId, username, userId }) {
   const [messages, setMessages] = useState([]);
@@ -86,6 +87,7 @@ export default function Chatting({ roomId, username, userId }) {
       <div className={styles.input}>
         <input value={text} onChange={(e) => setText(e.target.value)} />
         <LuSend onClick={handleSend} className={styles.icon} />
+        <IoImageOutline className={styles.icon_image} />
       </div>
     </div>
   );

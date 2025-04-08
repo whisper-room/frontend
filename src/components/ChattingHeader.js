@@ -3,7 +3,15 @@ import ChatRoomOptionModal from '../components/ChatRoomOptionModal';
 import { IoMdMenu } from 'react-icons/io';
 import { useState, useRef, useEffect } from 'react';
 
-function ChattingHeader({ selectedRoomName, selectedRoomId, fetchChatList, setSelectedRoomId, setSelectedRoomName }) {
+function ChattingHeader({
+  user,
+  selectedRoomName,
+  selectedRoomId,
+  fetchChatList,
+  setSelectedRoomId,
+  setSelectedRoomName,
+  selectedRoomImg,
+}) {
   const [showOption, setShowOption] = useState(false);
   const modalRef = useRef(null);
 
@@ -35,6 +43,7 @@ function ChattingHeader({ selectedRoomName, selectedRoomId, fetchChatList, setSe
           setSelectedRoomId={setSelectedRoomId}
           setSelectedRoomName={setSelectedRoomName}
           modalRef={modalRef}
+          selectedRoomImg={selectedRoomImg}
         />
       )}
     </div>

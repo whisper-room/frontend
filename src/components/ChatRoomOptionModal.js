@@ -1,4 +1,6 @@
 import styles from '../css/ChatRoomOptionModal.module.css';
+import ChatRoomModify from '../components/ChatRoomModify';
+import { useState } from 'react';
 
 function ChatroomOptionsModal({
   modalRef,
@@ -7,7 +9,9 @@ function ChatroomOptionsModal({
   setShowOption,
   setSelectedRoomId,
   setSelectedRoomName,
+  selectedRoomImg,
 }) {
+  const [modifyClickCheck, setModifyClickCheck] = useState(false);
   const handleMessageDelete = async () => {
     try {
       const response = await fetch(`http://localhost:3000/chatroom/${selectedRoomId}`, {
@@ -29,12 +33,21 @@ function ChatroomOptionsModal({
       console.error('ChatRoom Delete Error:', error);
     }
   };
+  const handleMessageModify = () => {
+    setModifyClickCheck(true);
+  };
+  console.log(modifyClickCheck);
   return (
-    <div ref={modalRef} className={styles.div}>
-      <button>채팅방 수정</button>
-      <button onClick={handleMessageDelete}>채팅방 삭제</button>
-      <button>대화상대 초대</button>
-    </div>
+    <>
+      {!modifyClickCheck && (
+        <div ref={modalRef} className={styles.div}>
+          <button onClick={handleMessageModify}>채팅방 수정</button>
+          <button onClick={handleMessageDelete}>채팅방 삭제</button>
+          <button>대화상대 초대</button>
+        </div>
+      )}
+      {modifyClickCheck && <ChatRoomModify roomImg={selectedRoomImg} roomId={selectedRoomId} />}
+    </>
   );
 }
 export default ChatroomOptionsModal;

@@ -21,6 +21,7 @@ function Chatroom() {
   const [showPlusIcon, setShowPlusIcon] = useState(false); //채팅방 추가 아이콘 클릭 여부 확인
   const [selectedRoomId, setSelectedRoomId] = useState(null);
   const [selectedRoomName, setSelectedRoomName] = useState('');
+  const [selectedRoomImg, setSelectedRoomImg] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const inputRef = useRef(null);
   const searchIconRef = useRef(null);
@@ -170,6 +171,7 @@ function Chatroom() {
               selectedRoomName={selectedRoomName}
               setSelectedRoomId={setSelectedRoomId}
               setSelectedRoomName={setSelectedRoomName}
+              selectedRoomImg={selectedRoomImg}
             />
           )}
         </div>
@@ -178,9 +180,10 @@ function Chatroom() {
             roomname={filteredRooms.map((room) => room.name)}
             roomimg={filteredRooms.map((room) => room.img)}
             roomIds={filteredRooms.map((room) => room.id)}
-            onClick={(roomId, roomName) => {
+            onClick={(roomId, roomName, roomImg) => {
               setSelectedRoomId(roomId);
               setSelectedRoomName(roomName);
+              setSelectedRoomImg(roomImg);
             }}
           />
         </div>

@@ -101,5 +101,12 @@
 .icon {
   position: absolute;
   right: 5px;
-  top: 11px;
+  top: 8px;
+  font-size: 24px;
+}
+.icon_image {
+  position: absolute;
+  right: 40px;
+  top: 8px;
+  font-size: 24px;
 }
