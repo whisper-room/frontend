@@ -4,7 +4,7 @@ import { IoCameraOutline } from 'react-icons/io5';
 import { RxCross2 } from 'react-icons/rx';
 import { useState, useRef } from 'react';
 
-function ChatRoomModify({ roomImg, roomId }) {
+function ChatRoomModify({ roomImg, roomId, fetchChatList, setSelectedRoomName, setModifyClickCheck }) {
   const [imgFile, setImgFile] = useState('');
   const [roomname, setRoomName] = useState('');
 

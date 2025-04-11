@@ -46,7 +46,15 @@ function ChatroomOptionsModal({
           <button>대화상대 초대</button>
         </div>
       )}
-      {modifyClickCheck && <ChatRoomModify roomImg={selectedRoomImg} roomId={selectedRoomId} />}
+      {modifyClickCheck && (
+        <ChatRoomModify
+          roomImg={selectedRoomImg}
+          roomId={selectedRoomId}
+          fetchChatList={fetchChatList}
+          setSelectedRoomName={setSelectedRoomName}
+          setModifyClickCheck={setModifyClickCheck}
+        />
+      )}
     </>
   );
 }
