@@ -39,12 +39,12 @@
   flex-direction: row;
   justify-content: end;
 }
-.my_chat_div span {
+.my_chat_div span,
+.my_chat_div img {
   margin-right: 36px;
   display: flex;
   align-items: center;
 }
-
 .other_chat_div {
   width: 100%;
   display: flex;
@@ -109,4 +109,10 @@
   right: 40px;
   top: 8px;
   font-size: 24px;
+}
+.chat_image {
+  max-width: 200px;
+  max-height: 200px;
+  margin-top: 5px;
+  border-radius: 10px;
 }
