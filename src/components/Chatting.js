@@ -105,6 +105,7 @@ export default function Chatting({ roomId, username, userId }) {
                   {msg.img_url && (
                     <img src={`http://localhost:3000/${msg.img_url}`} alt="보낸 이미지" className={styles.chat_image} />
                   )}
+                  {msg.unreadCount > 0 && <div className={styles.unread}>{msg.unreadCount}</div>}
                 </div>
               ) : (
                 <>
@@ -123,6 +124,7 @@ export default function Chatting({ roomId, username, userId }) {
                         className={styles.chat_image}
                       />
                     )}
+                    {msg.unreadCount > 0 && <div className={styles.unread}>{msg.unreadCount}</div>}
                   </div>
                 </>
               )}
