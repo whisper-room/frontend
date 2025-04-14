@@ -29,20 +29,24 @@ export default function Chatting({ roomId, username, userId }) {
   }, [roomId]);
 
   useEffect(() => {
-    // 방에 입장
     socket.emit('joinRoom', roomId);
+    socket.emit('markAsRead', { roomId, userId });
 
-    // 메시지 수신
     socket.on('receiveMessage', (message) => {
       setMessages((prev) => [...prev, message]);
     });
 
-    // 클린업
+    socket.on('updateMessages', (updatedMessages) => {
+      // 읽음 처리된 메시지들에 대해 UI 업데이트
+      setMessages(updatedMessages);
+    });
+
     return () => {
       socket.emit('leaveRoom', roomId);
-      socket.off('receiveMessage'); // 메모리 누수 방지
+      socket.off('receiveMessage');
+      socket.off('updateMessages');
     };
-  }, [roomId]);
+  }, [roomId, userId]);
 
   useEffect(() => {
     if (messagesEndRef.current) {
