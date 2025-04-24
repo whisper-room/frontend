@@ -9,6 +9,26 @@ export default function Chatting({ roomId, username, userId }) {
   const [text, setText] = useState('');
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
+  const chatWindowRef = useRef(null);
+
+  //포커스 여부 체크하여 읽음 처리
+  useEffect(() => {
+    const handleFocus = () => {
+      if (!roomId || !userId) return;
+      socket.emit('markAsRead', { roomId, userId });
+    };
+
+    const current = chatWindowRef.current;
+    if (current) {
+      current.addEventListener('mouseenter', handleFocus); // 마우스 올라왔을 때
+    }
+
+    return () => {
+      if (current) {
+        current.removeEventListener('mouseenter', handleFocus);
+      }
+    };
+  }, [roomId, userId]);
 
   // 방 클릭 시 초기 메시지 가져옴
   useEffect(() => {
@@ -29,30 +49,41 @@ export default function Chatting({ roomId, username, userId }) {
   }, [roomId]);
 
   useEffect(() => {
+    // 방에 입장
     socket.emit('joinRoom', roomId);
-    socket.emit('markAsRead', { roomId, userId });
 
+    // 메시지 수신
     socket.on('receiveMessage', (message) => {
       setMessages((prev) => [...prev, message]);
     });
 
     socket.on('updateMessages', (updatedMessages) => {
-      // 읽음 처리된 메시지들에 대해 UI 업데이트
+      console.log('업데이트된 메시지:', updatedMessages);
       setMessages(updatedMessages);
     });
 
     return () => {
       socket.emit('leaveRoom', roomId);
       socket.off('receiveMessage');
-      socket.off('updateMessages');
+      socket.off('updateMessages'); // 클린업도 꼭 해주세요!
     };
-  }, [roomId, userId]);
+  }, [roomId]);
 
   useEffect(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
     }
   }, [messages]);
+
+  useEffect(() => {
+    if (!roomId || !userId) return;
+
+    const timeout = setTimeout(() => {
+      socket.emit('markAsRead', { roomId, userId });
+    }, 500); // 약간의 지연으로 '실제로 화면에 표시되었음'을 보장
+
+    return () => clearTimeout(timeout);
+  }, [roomId, userId, messages.length]);
 
   const handleSend = () => {
     if (text.trim() === '') return;
@@ -97,7 +128,7 @@ export default function Chatting({ roomId, username, userId }) {
   };
 
   return (
-    <div className={styles.div}>
+    <div className={styles.div} ref={chatWindowRef}>
       <div className={styles.messageContainer} ref={messagesEndRef}>
         {messages.map((msg, idx) => {
           const isMine = msg.sender._id === userId;
@@ -109,7 +140,7 @@ export default function Chatting({ roomId, username, userId }) {
                   {msg.img_url && (
                     <img src={`http://localhost:3000/${msg.img_url}`} alt="보낸 이미지" className={styles.chat_image} />
                   )}
-                  {msg.unreadCount > 0 && <div className={styles.unread}>{msg.unreadCount}</div>}
+                  {msg.unreadCount > 0 && <span className={styles.unreadCount}>{msg.unreadCount}명 안 읽음</span>}
                 </div>
               ) : (
                 <>
@@ -128,7 +159,6 @@ export default function Chatting({ roomId, username, userId }) {
                         className={styles.chat_image}
                       />
                     )}
-                    {msg.unreadCount > 0 && <div className={styles.unread}>{msg.unreadCount}</div>}
                   </div>
                 </>
               )}
