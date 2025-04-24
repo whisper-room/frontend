@@ -11,24 +11,22 @@ export default function Chatting({ roomId, username, userId }) {
   const fileInputRef = useRef(null);
   const chatWindowRef = useRef(null);
 
-  //포커스 여부 체크하여 읽음 처리
+  // 채팅방 입장 + 메시지 수신 처리
   useEffect(() => {
-    const handleFocus = () => {
-      if (!roomId || !userId) return;
-      socket.emit('markAsRead', { roomId, userId });
-    };
+    if (!roomId) return;
 
-    const current = chatWindowRef.current;
-    if (current) {
-      current.addEventListener('mouseenter', handleFocus); // 마우스 올라왔을 때
-    }
+    socket.emit('joinRoom', roomId);
+    socket.on('receiveMessage', (message) => {
+      setMessages((prev) => [...prev, message]);
+    });
+    socket.on('updateMessages', setMessages);
 
     return () => {
-      if (current) {
-        current.removeEventListener('mouseenter', handleFocus);
-      }
+      socket.emit('leaveRoom', roomId);
+      socket.off('receiveMessage');
+      socket.off('updateMessages');
     };
-  }, [roomId, userId]);
+  }, [roomId]);
 
   // 방 클릭 시 초기 메시지 가져옴
   useEffect(() => {
@@ -48,60 +46,40 @@ export default function Chatting({ roomId, username, userId }) {
     fetchMessages();
   }, [roomId]);
 
-  useEffect(() => {
-    // 방에 입장
-    socket.emit('joinRoom', roomId);
-
-    // 메시지 수신
-    socket.on('receiveMessage', (message) => {
-      setMessages((prev) => [...prev, message]);
-    });
-
-    socket.on('updateMessages', (updatedMessages) => {
-      console.log('업데이트된 메시지:', updatedMessages);
-      setMessages(updatedMessages);
-    });
-
-    return () => {
-      socket.emit('leaveRoom', roomId);
-      socket.off('receiveMessage');
-      socket.off('updateMessages'); // 클린업도 꼭 해주세요!
-    };
-  }, [roomId]);
-
+  // 자동 스크롤
   useEffect(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
     }
   }, [messages]);
 
+  // 읽음 처리 (지연 + 마우스 진입)
   useEffect(() => {
     if (!roomId || !userId) return;
 
-    const timeout = setTimeout(() => {
-      socket.emit('markAsRead', { roomId, userId });
-    }, 500); // 약간의 지연으로 '실제로 화면에 표시되었음'을 보장
+    const markRead = () => socket.emit('markAsRead', { roomId, userId });
 
-    return () => clearTimeout(timeout);
+    const timeout = setTimeout(markRead, 500);
+    const current = chatWindowRef.current;
+    current?.addEventListener('mouseenter', markRead);
+
+    return () => {
+      clearTimeout(timeout);
+      current?.removeEventListener('mouseenter', markRead);
+    };
   }, [roomId, userId, messages.length]);
 
+  // 텍스트 전송
   const handleSend = () => {
-    if (text.trim() === '') return;
-    socket.emit('sendMessage', {
-      roomId,
-      sender: userId,
-      text,
-    });
-    setText('');
+    if (text.trim()) {
+      socket.emit('sendMessage', { roomId, sender: userId, text });
+      setText('');
+    }
   };
 
-  const handleImageClick = () => {
-    fileInputRef.current.click();
-  };
-
+  // 이미지 전송
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
-    console.log(file);
     if (!file) return;
 
     const formData = new FormData();
@@ -115,15 +93,9 @@ export default function Chatting({ roomId, username, userId }) {
         body: formData,
         credentials: 'include',
       });
-
-      const data = await res.json();
-      if (res.ok) {
-        console.log('이미지 메시지 전송 성공:', data);
-      } else {
-        console.error(data.message);
-      }
+      if (!res.ok) throw new Error('이미지 업로드 실패');
     } catch (err) {
-      console.error('이미지 전송 실패:', err);
+      console.error(err);
     }
   };
 
@@ -134,34 +106,23 @@ export default function Chatting({ roomId, username, userId }) {
           const isMine = msg.sender._id === userId;
           return (
             <div key={idx} className={isMine ? styles.my_chat_div : styles.other_chat_div}>
-              {isMine ? (
-                <div className={styles.my_chat_div}>
-                  {msg.text && <span className={styles.my_message}>{msg.text}</span>}
-                  {msg.img_url && (
-                    <img src={`http://localhost:3000/${msg.img_url}`} alt="보낸 이미지" className={styles.chat_image} />
-                  )}
-                  {msg.unreadCount > 0 && <span className={styles.unreadCount}>{msg.unreadCount}명 안 읽음</span>}
-                </div>
-              ) : (
-                <>
-                  <img
-                    src={`http://localhost:3000/${msg.sender.profile}`}
-                    alt="프로필"
-                    className={styles.profile_image}
-                  />
-                  <div className={styles.other_chat_div}>
-                    <strong className={styles.strong}>{msg.sender?.username || '알 수 없음'}</strong>
-                    {msg.text && <span className={styles.other_message}>{msg.text}</span>}
-                    {msg.img_url && (
-                      <img
-                        src={`http://localhost:3000/${msg.img_url}`}
-                        alt="받은 이미지"
-                        className={styles.chat_image}
-                      />
-                    )}
-                  </div>
-                </>
+              {!isMine && (
+                <img
+                  src={`http://localhost:3000/${msg.sender.profile}`}
+                  alt="프로필"
+                  className={styles.profile_image}
+                />
               )}
+              <div className={isMine ? styles.my_chat_div : styles.other_chat_div}>
+                {!isMine && <strong className={styles.strong}>{msg.sender?.username}</strong>}
+                {msg.text && <span className={isMine ? styles.my_message : styles.other_message}>{msg.text}</span>}
+                {msg.img_url && (
+                  <img src={`http://localhost:3000/${msg.img_url}`} alt="채팅 이미지" className={styles.chat_image} />
+                )}
+                {isMine && msg.unreadCount > 0 && (
+                  <span className={styles.unreadCount}>{msg.unreadCount}명 안 읽음</span>
+                )}
+              </div>
             </div>
           );
         })}
@@ -170,7 +131,7 @@ export default function Chatting({ roomId, username, userId }) {
       <div className={styles.input}>
         <input value={text} onChange={(e) => setText(e.target.value)} />
         <LuSend onClick={handleSend} className={styles.icon} />
-        <IoImageOutline className={styles.icon_image} onClick={handleImageClick} />
+        <IoImageOutline onClick={() => fileInputRef.current.click()} className={styles.icon_image} />
         <input
           type="file"
           accept="image/*"
