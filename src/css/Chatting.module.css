@@ -21,6 +21,7 @@
   border-radius: 10px;
   padding: 10px;
   margin: 5px 0;
+  margin-right: 36px;
 }
 .my_message::after {
   content: '';
@@ -38,10 +39,10 @@
   display: flex;
   flex-direction: row;
   justify-content: end;
+  position: relative;
 }
 .my_chat_div span,
 .my_chat_div img {
-  margin-right: 36px;
   display: flex;
   align-items: center;
 }
@@ -115,4 +116,18 @@
   max-height: 200px;
   margin-top: 5px;
   border-radius: 10px;
+}
+.unreadCountLeft {
+  font-size: 0.75rem;
+  color: gray;
+  margin-right: 6px;
+  align-self: flex-end;
+  margin-bottom: 5px;
+}
+
+.unreadCountRight {
+  font-size: 0.75rem;
+  color: gray;
+  margin-left: 6px;
+  align-self: flex-end;
 }

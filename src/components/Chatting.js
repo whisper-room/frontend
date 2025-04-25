@@ -115,13 +115,12 @@ export default function Chatting({ roomId, username, userId }) {
               )}
               <div className={isMine ? styles.my_chat_div : styles.other_chat_div}>
                 {!isMine && <strong className={styles.strong}>{msg.sender?.username}</strong>}
+                {isMine && msg.unreadCount > 0 && <span className={styles.unreadCountLeft}>{msg.unreadCount}</span>}
                 {msg.text && <span className={isMine ? styles.my_message : styles.other_message}>{msg.text}</span>}
                 {msg.img_url && (
                   <img src={`http://localhost:3000/${msg.img_url}`} alt="채팅 이미지" className={styles.chat_image} />
                 )}
-                {isMine && msg.unreadCount > 0 && (
-                  <span className={styles.unreadCount}>{msg.unreadCount}명 안 읽음</span>
-                )}
+                {!isMine && msg.unreadCount > 0 && <span className={styles.unreadCountRight}>{msg.unreadCount}</span>}
               </div>
             </div>
           );
